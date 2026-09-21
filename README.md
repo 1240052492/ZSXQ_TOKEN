@@ -18,6 +18,7 @@ New API + AI 超级画布整合项目的验收基线与合并门禁。
 
 - [模块验收目标](./ZSXQ_整合项目_模块验收目标.md)
 - [结构化验收矩阵](./docs/acceptance/matrix.json)
+- [代码合并标准](./docs/acceptance/merge-policy.md)
 - [证据记录模板](./docs/acceptance/evidence-template.md)
 - [许可证审查记录](./docs/compliance/license-review.md)
 
@@ -27,4 +28,3 @@ New API + AI 超级画布整合项目的验收基线与合并门禁。
 - `in_progress`：已有实现或测试正在进行。
 - `passed`：证据已归档且满足通过条件。
 - `blocked`：存在明确阻断原因，禁止以此状态合并生产放行变更。
-
