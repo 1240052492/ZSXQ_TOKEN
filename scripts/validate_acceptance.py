@@ -7,6 +7,7 @@ import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 MATRIX = ROOT / "docs" / "acceptance" / "matrix.json"
+MERGE_POLICY = ROOT / "docs" / "acceptance" / "merge-policy.json"
 REQUIRED_IDS = {f"M{i:02d}" for i in range(1, 21)} | {f"E2E-{i:02d}" for i in range(1, 6)}
 REQUIRED_REQUIREMENTS = {str(i) for i in range(1, 17)}
 ALLOWED_STATUS = {"planned", "in_progress", "passed", "blocked"}
@@ -67,6 +68,20 @@ def main() -> None:
     ]
     if critical_unpassed and data.get("gate_mode") == "production":
         fail(f"production gate has unpassed P0/P1 items: {critical_unpassed}")
+
+    if not MERGE_POLICY.exists():
+        fail("missing docs/acceptance/merge-policy.json")
+    policy = json.loads(MERGE_POLICY.read_text(encoding="utf-8"))
+    required_checks = set(policy.get("required_status_checks", []))
+    expected_checks = {
+        "Acceptance Gate / acceptance",
+        "Security Gate / secret-scan",
+        "License Review Gate / license-review",
+    }
+    if not expected_checks.issubset(required_checks):
+        fail("merge policy must require all acceptance, security, and license checks")
+    if policy.get("allow_force_pushes") is not False or policy.get("allow_deletions") is not False:
+        fail("merge policy must disallow force pushes and branch deletion")
 
     print(f"Acceptance matrix valid: {len(items)} items; gate_mode={data.get('gate_mode')}")
 
