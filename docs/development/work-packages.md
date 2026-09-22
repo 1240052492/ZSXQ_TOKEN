@@ -100,6 +100,7 @@ WP-09 和 WP-10 可以在 WP-07 的基础适配完成后并行；WP-11、WP-12 �
 **交付物**：三库初始化迁移、权限矩阵、OpenAPI/事件契约、服务认证配置。
 
 当前契约草案：[`contracts/platform-integration.openapi.yaml`](../../contracts/platform-integration.openapi.yaml)。
+当前实施记录：[`WP-02 baseline`](../delivery/WP-02/baseline.md)。
 
 **验收/测试**：M05、M20；画布账号无法读写钱包表；三库可独立迁移、备份和恢复。
 
