@@ -19,7 +19,7 @@
 | 编号 | 命令 | 结果 | 证据/说明 |
 |---|---|---|---|
 | S01 | `python scripts/validate_acceptance.py` | 通过 | `Acceptance matrix valid: 25 items; gate_mode=baseline` |
-| S02 | `python scripts/check_license.py` | 通过门禁检查，合规状态 pending | 输出 `License review is pending; production release remains blocked.` |
+| S02 | `python scripts/check_license.py` | 按当前门禁预期阻断（exit 1），合规状态 pending | 输出 `License review is pending; production release remains blocked.`；生产放行必须保持阻断 |
 | S03 | `.github/workflows/security.yml` 同等 `git grep` 凭据扫描 | 无命中 | 命令退出码为 1，表示 grep 未找到匹配；不得把退出码 1 当作扫描故障 |
 | S04 | `git diff --check` | 通过 | 无空白错误 |
 
