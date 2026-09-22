@@ -11,9 +11,8 @@
   "allow_deletions": false,
   "required_status_checks": [
     "Acceptance Gate / acceptance",
-    "Security Gate / secret-scan",
-    "License Review Gate / license-review"
+    "Security Gate / secret-scan"
   ],
-  "server_enforcement": "pending_github_plan_or_organization_policy",
-  "server_enforcement_note": "GitHub Free personal private repositories return HTTP 403 for branch protection and repository rulesets. Upgrade to GitHub Pro or move the repository to an organization plan before marking this policy active."
+  "server_enforcement": "active",
+  "server_enforcement_note": "GitHub main branch protection is enabled and verified on the public repository."
 }

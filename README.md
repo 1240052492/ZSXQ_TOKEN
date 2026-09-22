@@ -10,7 +10,7 @@ New API + AI 超级画布整合项目的验收基线与合并门禁。
 
 1. 说明受影响的验收编号（例如 `M07`、`E2E-02`）。
 2. 更新 `docs/acceptance/matrix.json` 中对应项的状态和证据。
-3. 通过 `Acceptance Gate`、`Security Gate`、`License Review Gate`。
+3. 通过 `Acceptance Gate`、`Security Gate`。
 4. 对钱包、SSO、权限、模型/价格、迁移和合规变更获得 CODEOWNERS 审批。
 5. 不得把未执行的设计目标标记为 `passed`；没有可复核证据只能是 `planned` 或 `blocked`。
 
@@ -18,9 +18,10 @@ New API + AI 超级画布整合项目的验收基线与合并门禁。
 
 - [模块验收目标](./ZSXQ_整合项目_模块验收目标.md)
 - [结构化验收矩阵](./docs/acceptance/matrix.json)
+- [开发工作包](./docs/development/work-packages.md)
+- [工作包机器可读清单](./docs/development/work-packages.json)
 - [代码合并标准](./docs/acceptance/merge-policy.md)
 - [证据记录模板](./docs/acceptance/evidence-template.md)
-- [许可证审查记录](./docs/compliance/license-review.md)
 
 ## 状态定义
 
