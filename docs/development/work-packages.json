@@ -2,7 +2,7 @@
   "schema_version": 1,
   "status_definitions": ["planned", "in_progress", "blocked", "done"],
   "work_packages": [
-    {"id":"WP-00","title":"source-license-compatibility-audit","status":"blocked","depends_on":[],"acceptance_ids":["M01"],"owner_role":"architecture-compliance","deliverables":["source-baseline","license-review","risk-register"]},
+    {"id":"WP-00","title":"source-compatibility-baseline","status":"blocked","depends_on":[],"acceptance_ids":["M01"],"owner_role":"architecture","deliverables":["source-baseline","license-notice-inventory","risk-register"]},
     {"id":"WP-01","title":"repository-build-development-baseline","status":"planned","depends_on":["WP-00"],"acceptance_ids":["M01","M20"],"owner_role":"devops","deliverables":["build-pipeline","runtime-lock","immutable-artifact"]},
     {"id":"WP-02","title":"database-isolation-service-contracts","status":"planned","depends_on":["WP-00","WP-01"],"acceptance_ids":["M05","M20"],"owner_role":"backend-dba","deliverables":["database-migrations","permission-matrix","service-contracts"]},
     {"id":"WP-03","title":"unified-identity-one-time-sso","status":"planned","depends_on":["WP-02"],"acceptance_ids":["M03","M04","M19","E2E-01"],"owner_role":"platform-backend","deliverables":["sso-api","canvas-session","replay-tests"]},

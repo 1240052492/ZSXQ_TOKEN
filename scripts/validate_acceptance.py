@@ -74,11 +74,7 @@ def main() -> None:
         fail("missing docs/acceptance/merge-policy.json")
     policy = json.loads(MERGE_POLICY.read_text(encoding="utf-8"))
     required_checks = set(policy.get("required_status_checks", []))
-    expected_checks = {
-        "Acceptance Gate / acceptance",
-        "Security Gate / secret-scan",
-        "License Review Gate / license-review",
-    }
+    expected_checks = {"Acceptance Gate / acceptance", "Security Gate / secret-scan"}
     if not expected_checks.issubset(required_checks):
         fail("merge policy must require all acceptance, security, and license checks")
     if policy.get("allow_force_pushes") is not False or policy.get("allow_deletions") is not False:

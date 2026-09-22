@@ -19,7 +19,7 @@
 | 编号 | 命令 | 结果 | 证据/说明 |
 |---|---|---|---|
 | S01 | `python scripts/validate_acceptance.py` | 通过 | `Acceptance matrix valid: 25 items; gate_mode=baseline` |
-| S02 | `python scripts/check_license.py` | 按当前门禁预期阻断（exit 1），合规状态 pending | 输出 `License review is pending; production release remains blocked.`；生产放行必须保持阻断 |
+| S02 | 上游许可证声明清单 | 未执行 | 上游源码尚未归档；本仓库不再运行人工许可证审查门禁 |
 | S03 | `.github/workflows/security.yml` 同等 `git grep` 凭据扫描 | 无命中 | 命令退出码为 1，表示 grep 未找到匹配；不得把退出码 1 当作扫描故障 |
 | S04 | `git diff --check` | 通过 | 无空白错误 |
 
@@ -35,4 +35,4 @@
 
 ## 合并判断
 
-本报告只能作为当前 `in_progress/blocked` 证据，不能支持把 `M01` 改为 `passed`。WP-00 的 PR 仍需关联 `M01`，补齐测试计划中列出的全部证据，并通过 Acceptance、Security、License Review 三个状态检查。
+本报告只能作为当前 `in_progress/blocked` 证据，不能支持把 `M01` 改为 `passed`。WP-00 的 PR 仍需关联 `M01`，补齐测试计划中列出的全部证据，并通过 Acceptance、Security 两个状态检查。

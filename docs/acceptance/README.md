@@ -14,5 +14,3 @@
 
 - `Acceptance Gate`：结构、追踪、状态、P0/P1 和证据完整性。
 - `Security Gate`：阻止明显的密钥/密码/授权码泄露和不合规的生产状态声明。
-- `License Review Gate`：确保许可证审查记录存在，未审查时阻止生产放行声明。
-

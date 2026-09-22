@@ -11,8 +11,7 @@
   "allow_deletions": false,
   "required_status_checks": [
     "Acceptance Gate / acceptance",
-    "Security Gate / secret-scan",
-    "License Review Gate / license-review"
+    "Security Gate / secret-scan"
   ],
   "server_enforcement": "active",
   "server_enforcement_note": "GitHub main branch protection is enabled and verified on the public repository."

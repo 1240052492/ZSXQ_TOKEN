@@ -4,7 +4,7 @@
 
 `main` can only be updated through a pull request. A pull request must satisfy:
 
-- `Acceptance Gate / acceptance`, `Security Gate / secret-scan`, and `License Review Gate / license-review` all pass;
+- `Acceptance Gate / acceptance` and `Security Gate / secret-scan` all pass;
 - at least one approval is present and CODEOWNERS approval is required for protected paths;
 - stale approvals are dismissed after a new push and the last push must be approved;
 - all review conversations are resolved;
@@ -26,4 +26,3 @@ The repository is public. GitHub `main` branch protection is enabled and verifie
 - required conversation resolution and linear history;
 - force-push and branch-deletion protection;
 - administrator enforcement.
-

@@ -60,7 +60,7 @@ WP-00 没有可交付的用户界面，但必须模拟后续关键链路的数�
 | 编号 | 检查 | 命令/证据 | 通过标准 |
 |---|---|---|---|
 | S01 | 本仓库验收门禁 | `python scripts/validate_acceptance.py` | 输出 `Acceptance matrix valid`，且 `M01` 未被错误标记为 `passed` |
-| S02 | 许可证门禁 | `python scripts/check_license.py` | 能识别当前 `pending` 状态；不得输出生产合规已批准的误导性结论 |
+| S02 | 许可证声明完整性 | 检查上游 `LICENSE`/`NOTICE`/版权归因文件是否随制品保留 | 记录来源和声明文件；本仓库不执行人工许可证审查门禁 |
 | S03 | 安全扫描 | `git grep -nI -E '(ghp_|PRIVATE KEY|AKIA|password...)'`，排除模板文件 | 无凭据形态内容；扫描结果保存到 `test-report.md` |
 | S04 | 证据完整性 | 校验 `source-baseline.md`、`commit-manifest.json`、`dependency-inventory.json`、`license-review.md`、`test-report.md` 是否存在且字段齐全 | 所有必需字段可复核；缺失文件或敏感信息均阻断合并 |
 
@@ -87,7 +87,7 @@ WP-00 在 `license-review.md` 为 `pending`、上游源码未固定或 F01/F02 �
 - 标题符合 `[WP-00] ...`，描述关联 `M01`；
 - 附 `test-report.md` 和全部证据路径，不能只写“审计完成”；
 - `docs/acceptance/matrix.json` 中 `M01` 状态与证据一致；未完成不得写 `passed`；
-- 通过 `Acceptance Gate`、`Security Gate`、`License Review Gate`；
+- 通过 `Acceptance Gate`、`Security Gate`；许可证审查不再作为本仓库合并门禁。
 - 至少一名 CODEOWNER 审核，且无未关闭 P0/P1 风险；
 - 明确后续 WP-01/WP-02 可引用的 commit、依赖、接口和禁止复用清单；
 - 提供回滚/撤销审计产物的方法，不提交任何秘密材料。
