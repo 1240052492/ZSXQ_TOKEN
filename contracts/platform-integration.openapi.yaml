@@ -1,0 +1,301 @@
+openapi: 3.0.3
+info:
+  title: ZSXQ Platform Integration Contract
+  version: 0.1.0
+  description: >-
+    Internal contract between New API control plane and super_canvas business
+    service. The canvas service never writes wallet balances or provider keys.
+servers:
+  - url: http://new-api.internal
+    description: Local demo placeholder
+security:
+  - serviceBearer: []
+paths:
+  /internal/v1/sso/authorize:
+    post:
+      summary: Issue a one-time canvas authorization code
+      operationId: issueCanvasAuthorizationCode
+      tags: [sso]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SsoAuthorizeRequest'
+      responses:
+        '200':
+          description: Authorization code issued
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SsoAuthorizeResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /internal/v1/sso/exchange:
+    post:
+      summary: Exchange a one-time code for a canvas session subject
+      operationId: exchangeCanvasAuthorizationCode
+      tags: [sso]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SsoExchangeRequest'
+      responses:
+        '200':
+          description: User subject returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SsoExchangeResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /internal/v1/models/catalog:
+    get:
+      summary: List models usable by a canvas capability
+      operationId: listCanvasModels
+      tags: [models]
+      parameters:
+        - $ref: '#/components/parameters/Capability'
+      responses:
+        '200':
+          description: Filtered model catalog
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CanvasModel'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /internal/v1/quotes:
+    post:
+      summary: Quote a task using a published price version
+      operationId: quoteTask
+      tags: [billing]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuoteRequest'
+      responses:
+        '200':
+          description: Quote response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuoteResponse'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /internal/v1/reservations:
+    post:
+      summary: Reserve wallet quota for a task
+      operationId: reserveQuota
+      tags: [billing]
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReserveRequest'
+      responses:
+        '201':
+          description: Reservation created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reservation'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /internal/v1/model-proxy/invoke:
+    post:
+      summary: Invoke a model through New API
+      operationId: invokeModelProxy
+      tags: [models]
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProxyInvokeRequest'
+      responses:
+        '202':
+          description: Model task accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProxyInvokeResponse'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /internal/v1/settlements:
+    post:
+      summary: Settle successful usage or release/refund failed usage
+      operationId: settleUsage
+      tags: [billing]
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SettlementRequest'
+      responses:
+        '200':
+          description: Settlement result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettlementResponse'
+        '409':
+          $ref: '#/components/responses/Conflict'
+components:
+  securitySchemes:
+    serviceBearer:
+      type: http
+      scheme: bearer
+      bearerFormat: service-token
+  parameters:
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema:
+        type: string
+        minLength: 16
+        maxLength: 128
+    Capability:
+      name: capability
+      in: query
+      required: true
+      schema:
+        $ref: '#/components/schemas/Capability'
+  responses:
+    BadRequest:
+      description: Invalid request
+    Unauthorized:
+      description: Invalid service or user authorization
+    Conflict:
+      description: Idempotency conflict, unavailable model, or insufficient quota
+  schemas:
+    Capability:
+      type: string
+      enum: [text, image, video, audio, music, understanding_moderation]
+    SsoAuthorizeRequest:
+      type: object
+      required: [audience, state]
+      properties:
+        audience:
+          type: string
+          enum: [canvas]
+        state:
+          type: string
+          minLength: 16
+    SsoAuthorizeResponse:
+      type: object
+      required: [code, expires_at]
+      properties:
+        code: {type: string}
+        expires_at: {type: string, format: date-time}
+    SsoExchangeRequest:
+      type: object
+      required: [code, audience, state]
+      properties:
+        code: {type: string}
+        audience: {type: string, enum: [canvas]}
+        state: {type: string}
+    SsoExchangeResponse:
+      type: object
+      required: [user_id, session_subject]
+      properties:
+        user_id: {type: string, format: uuid}
+        session_subject: {type: string}
+    CanvasModel:
+      type: object
+      required: [platform_model_id, alias, capability, price_version]
+      properties:
+        platform_model_id: {type: string}
+        alias: {type: string}
+        capability: {$ref: '#/components/schemas/Capability'}
+        price_version: {type: string}
+        protocol_adapter: {type: string}
+        parameter_profiles:
+          type: array
+          items: {type: string}
+    QuoteRequest:
+      type: object
+      required: [user_id, task_id, platform_model_id, alias, capability, parameters]
+      properties:
+        user_id: {type: string, format: uuid}
+        task_id: {type: string, format: uuid}
+        platform_model_id: {type: string}
+        alias: {type: string}
+        capability: {$ref: '#/components/schemas/Capability'}
+        parameters: {type: object, additionalProperties: true}
+    QuoteResponse:
+      type: object
+      required: [quote_id, price_version, estimated_quota, currency]
+      properties:
+        quote_id: {type: string, format: uuid}
+        price_version: {type: string}
+        estimated_quota: {type: integer, minimum: 0}
+        currency: {type: string, enum: [quota]}
+    ReserveRequest:
+      allOf:
+        - $ref: '#/components/schemas/QuoteRequest'
+        - type: object
+          required: [quote_id]
+          properties:
+            quote_id: {type: string, format: uuid}
+    Reservation:
+      type: object
+      required: [reservation_id, quote_id, reserved_quota, status]
+      properties:
+        reservation_id: {type: string, format: uuid}
+        quote_id: {type: string, format: uuid}
+        reserved_quota: {type: integer, minimum: 0}
+        status: {type: string, enum: [reserved, rejected]}
+    ProxyInvokeRequest:
+      type: object
+      required: [reservation_id, task_id, model_snapshot, input]
+      properties:
+        reservation_id: {type: string, format: uuid}
+        task_id: {type: string, format: uuid}
+        model_snapshot: {type: object, additionalProperties: true}
+        input: {type: object, additionalProperties: true}
+    ProxyInvokeResponse:
+      type: object
+      required: [request_id, task_id, status]
+      properties:
+        request_id: {type: string, format: uuid}
+        task_id: {type: string, format: uuid}
+        status: {type: string, enum: [accepted, rejected]}
+    SettlementRequest:
+      type: object
+      required: [reservation_id, task_id, outcome, actual_usage]
+      properties:
+        reservation_id: {type: string, format: uuid}
+        task_id: {type: string, format: uuid}
+        outcome: {type: string, enum: [success, failed, cancelled, moderation_rejected]}
+        actual_usage: {type: integer, minimum: 0}
+        failure_code: {type: string}
+    SettlementResponse:
+      type: object
+      required: [reservation_id, status, charged_usage, refunded_usage]
+      properties:
+        reservation_id: {type: string, format: uuid}
+        status: {type: string, enum: [settled, released, refunded]}
+        charged_usage: {type: integer, minimum: 0}
+        refunded_usage: {type: integer, minimum: 0}
