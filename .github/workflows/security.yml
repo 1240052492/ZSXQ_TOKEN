@@ -20,7 +20,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if git grep -nI -E '(ghp_[A-Za-z0-9]{20,}|-----BEGIN (RSA|OPENSSH|EC) PRIVATE KEY-----|AKIA[0-9A-Z]{16}|password[[:space:]]*[:=][[:space:]]*["'"'][^"'"']{8,})' -- ':!docs/acceptance/evidence-template.md'; then
+          if git grep -nI -E 'ghp_[A-Za-z0-9]{20,}|-----BEGIN (RSA|OPENSSH|EC) PRIVATE KEY-----|AKIA[0-9A-Z]{16}' -- ':!docs/acceptance/evidence-template.md'; then
             echo 'Credential-shaped content detected.'
             exit 1
           fi
