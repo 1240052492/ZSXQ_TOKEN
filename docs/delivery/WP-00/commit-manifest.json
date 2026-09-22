@@ -1,0 +1,25 @@
+{
+  "generated_at": "2026-09-22T00:00:00+08:00",
+  "status": "blocked",
+  "repositories": [
+    {
+      "name": "QuantumNous/new-api",
+      "url": "https://github.com/QuantumNous/new-api",
+      "branch": "main",
+      "commit": "9310231b3c27fea933e939b46cf26e0ce67192e3",
+      "license": "AGPL-3.0"
+    },
+    {
+      "name": "1240052492/LocalMiniDrama",
+      "url": "https://github.com/1240052492/LocalMiniDrama",
+      "branch": "main",
+      "commit": "adaecf71a38277126fbe1e5e0d79664300f855c1",
+      "license": "MIT",
+      "fork_parent": "xuanyustudio/LocalMiniDrama"
+    }
+  ],
+  "source_archived_in_zsxq_token": false,
+  "sbom_generated": false,
+  "clean_build_verified": false,
+  "license_review_status": "pending"
+}

@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "status_definitions": ["planned", "in_progress", "blocked", "done"],
+  "work_packages": [
+    {"id":"WP-00","title":"source-license-compatibility-audit","status":"blocked","depends_on":[],"acceptance_ids":["M01"],"owner_role":"architecture-compliance","deliverables":["source-baseline","license-review","risk-register"]},
+    {"id":"WP-01","title":"repository-build-development-baseline","status":"planned","depends_on":["WP-00"],"acceptance_ids":["M01","M20"],"owner_role":"devops","deliverables":["build-pipeline","runtime-lock","immutable-artifact"]},
+    {"id":"WP-02","title":"database-isolation-service-contracts","status":"planned","depends_on":["WP-00","WP-01"],"acceptance_ids":["M05","M20"],"owner_role":"backend-dba","deliverables":["database-migrations","permission-matrix","service-contracts"]},
+    {"id":"WP-03","title":"unified-identity-one-time-sso","status":"planned","depends_on":["WP-02"],"acceptance_ids":["M03","M04","M19","E2E-01"],"owner_role":"platform-backend","deliverables":["sso-api","canvas-session","replay-tests"]},
+    {"id":"WP-04","title":"wallet-ledger-reservation-settlement-refund","status":"planned","depends_on":["WP-02"],"acceptance_ids":["M06","M07","M13","E2E-02"],"owner_role":"billing-backend","deliverables":["ledger","reservation-api","settlement-api","reconciliation"]},
+    {"id":"WP-05","title":"model-catalog-capabilities-price-versions","status":"planned","depends_on":["WP-02","WP-04"],"acceptance_ids":["M08","M09","M10","E2E-03","E2E-04"],"owner_role":"model-platform","deliverables":["model-catalog","capability-filter","price-versioning"]},
+    {"id":"WP-06","title":"controlled-model-proxy-channel-failover","status":"planned","depends_on":["WP-04","WP-05"],"acceptance_ids":["M09","M11","M19","E2E-03"],"owner_role":"model-gateway","deliverables":["proxy-api","channel-adapters","usage-reporting"]},
+    {"id":"WP-07","title":"localminidrama-canvas-adapter","status":"planned","depends_on":["WP-01","WP-02","WP-03","WP-05","WP-06"],"acceptance_ids":["M12","E2E-01"],"owner_role":"canvas-team","deliverables":["canvas-adapter","node-mapping","canvas-regression"]},
+    {"id":"WP-08","title":"task-state-idempotency-retry-recovery","status":"planned","depends_on":["WP-04","WP-06","WP-07"],"acceptance_ids":["M07","M13","E2E-02"],"owner_role":"task-platform","deliverables":["state-machine","idempotency","recovery-runbook"]},
+    {"id":"WP-09","title":"asset-storage-lifecycle-zip-export","status":"planned","depends_on":["WP-02","WP-07","WP-08"],"acceptance_ids":["M14","M15","M16","E2E-05"],"owner_role":"storage-platform","deliverables":["storage-provider","lifecycle-worker","zip-worker"]},
+    {"id":"WP-10","title":"personal-space-readonly-share-moderation","status":"planned","depends_on":["WP-03","WP-07","WP-09"],"acceptance_ids":["M17","M18","M19","E2E-05"],"owner_role":"business-content-safety","deliverables":["readonly-share","moderation-state-machine","agreement-versioning"]},
+    {"id":"WP-11","title":"e2e-payment-failover-security-drills","status":"planned","depends_on":["WP-03","WP-04","WP-05","WP-06","WP-07","WP-08","WP-09","WP-10"],"acceptance_ids":["E2E-01","E2E-02","E2E-03","E2E-04","E2E-05"],"owner_role":"qa-security","deliverables":["e2e-suite","fault-injection","evidence-report"]},
+    {"id":"WP-12","title":"observability-backup-release-go-live","status":"planned","depends_on":["WP-01","WP-02","WP-04","WP-08","WP-09","WP-11"],"acceptance_ids":["M01","M02","M05","M15","M20"],"owner_role":"sre-compliance","deliverables":["observability","backup-restore","release-runbook","go-live-approval"]}
+  ]
+}
