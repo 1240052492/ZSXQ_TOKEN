@@ -1,0 +1,24 @@
+{
+  "status": "partial",
+  "source": "frozen upstream commit manifest",
+  "new_api": {
+    "runtime": "Go 1.25.1",
+    "lock_files": ["go.mod", "go.sum"],
+    "database_drivers": ["postgres", "mysql", "sqlite"],
+    "optional_infrastructure": ["redis"],
+    "sbom": "not_generated"
+  },
+  "local_mini_drama": {
+    "runtime": "Node.js >=18",
+    "lock_files": ["backend-node/package.json", "frontweb/package.json", "desktop/package.json"],
+    "database": "better-sqlite3",
+    "storage": "local filesystem",
+    "sbom": "not_generated"
+  },
+  "next_actions": [
+    "archive frozen source or reproducible source references",
+    "capture lockfile hashes",
+    "generate SPDX or CycloneDX SBOM",
+    "review high-risk dependency licenses"
+  ]
+}
