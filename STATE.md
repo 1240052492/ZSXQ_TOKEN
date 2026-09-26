@@ -29,8 +29,9 @@
   - ⚠️ 新会话必须先读取 `AGENTS.md` 和 `STATE.md`，再加载当前任务。
   - ⚠️ `vendor/agency-orchestrator` 缺失，GitHub 443 当前不可达；不得以未验证的远端 commit 或文档描述替代源码证据。
   - ⚠️ TapCanvas 本地工作树包含大量既有修改，且源码含 child_process、MCP、API Key、文件写入和回调入口；未经安全裁剪不得上线。
+  - ⚠️ 当前 Node.js 为 `v24.18.0`，项目契约声明 Node 22；测试在 Node 24 通过，但 Node 22 基线尚未复现，不得据此放行集成或生产。
 - **测试结果**：`npm run loop:validate; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; npm run loop:lint` 通过，exit 0；首次 `&&` 写法因 PowerShell 兼容性失败，已修正
 - **Lint 结果**：修正后的 `npm run loop:lint` 通过，18 个 JavaScript 文件；`git diff --check` exit 0
 - **变更文件**：`.loop/tasks/01-source-compatibility-baseline.md`、`.loop/evidence/LOOP-SRC-01-report.md`、`STATE.md`
-- **最后提交**：`67025d8`，`LOOP-SRC-01: record source baseline blocker`；本状态文件的最终交接持久化提交随后创建
+- **最后提交**：`1b5bd22`，`LOOP-SRC-01: persist blocked handoff state`；环境版本偏差记录待提交
 - **下一会话启动指令**：请读取 AGENTS.md 和 STATE.md，加载当前任务，从上次中断的地方继续。

@@ -30,6 +30,15 @@
 
 ## 本任务硬出口
 
+## 环境版本记录
+
+- Node.js：`v24.18.0`（项目静态契约声明 Node 22，存在运行时偏差）
+- Python：`3.14.3`
+- Docker：`29.6.2`，daemon 可连接；本任务未启动或修改 Compose 服务
+- pnpm：`10.28.2`
+- Go：`1.27.0`
+- Git：`2.54.0.windows.1`
+
 | 命令 | 结果 |
 | --- | --- |
 | `python scripts/validate_acceptance.py && npm run loop:lint` | 首次直接在 Windows PowerShell 执行失败，原因是该 shell 不支持 `&&`；非项目测试错误 |
