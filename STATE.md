@@ -1,9 +1,9 @@
 # Loop 状态交接契约
 
-- **当前任务阶段**：`LOOP-INIT-00` 已完成，等待加载下一个已批准工作包
+- **当前任务阶段**：`LOOP-SRC-01` 已阻塞，等待来源/许可证/能力边界人工确认
 - **任务分支**：`loop/init-framework-baseline`
 - **最大循环次数**：3
-- **当前 loop 次数**：0
+- **当前 loop 次数**：1 / 3
 - **已完成项**：
   - [x] 已确认集成模式、身份/密钥边界、计费规则和生产门禁要求
   - [x] 已创建任务分支，未触碰 `main` 或基础设施配置
@@ -11,18 +11,26 @@
   - [x] 已创建根级 `AGENTS.md`、`.loop/config.json`、任务、证据、日志和历史目录
   - [x] 已建立并运行统一 lint 命令
   - [x] 已完成 staged diff 复核并创建初始化提交 `d4a5478`
+  - [x] 已创建 `LOOP-SRC-01` 任务文件，限定为只读来源/许可证/能力核查
+  - [x] 已核查本地 New API/TapCanvas 来源文件和 TapCanvas 禁止能力入口
+  - [x] 已记录 agency-orchestrator 缺失及 GitHub 网络不可达证据
 - **未完成/待办项（Next Steps）**：
   - [x] 完成本任务的文件结构和命令基线
   - [x] 运行 `npm run loop:lint`、`npm test`、`git diff --check`
   - [x] 由协调者复核 diff 并提交初始化任务
-  - [ ] 启动下一个已获批准的工作包前，先细化 New API Key 绑定 API、SSO 回调和计费账本合同
+  - [x] 读取 `AGENTS.md`、本文件和 `01-source-compatibility-baseline.md` 后执行只读核查
+  - [x] 产出源码、许可证和禁止能力证据；已按规则停止后续实现
+  - [ ] 人工确认三个来源的固定 commit、许可证/NOTICE、清洁快照和 agency-orchestrator 导入方式
+  - [ ] 阻塞解除后，再细化 New API Key 绑定 API、SSO 回调和计费账本合同
 - **当前阻塞与踩坑提示（Blockers & Context）**：
   - ⚠️ 当前仓库之前已有未提交业务/文档改动，本任务不得回滚或覆盖；初始化提交必须只包含本任务声明的文件。
   - ⚠️ 基础设施尚未启动；任何 Docker、数据库、DNS、TLS、部署或密钥变更均需人工逐项确认。
   - ⚠️ 业务验收矩阵中的项目仍以 `planned`/`in_progress` 为准，不得因适配层测试通过而宣称 New API、SSO、真实计费或生产验收完成。
   - ⚠️ 新会话必须先读取 `AGENTS.md` 和 `STATE.md`，再加载当前任务。
-- **测试结果**：`npm test` 通过，验收矩阵 25 项、服务测试 18/2/4、smoke 5 项，exit 0
-- **Lint 结果**：`npm run loop:lint` 通过，18 个 JavaScript 文件，exit 0；`git diff --check` exit 0
-- **变更文件**：`AGENTS.md`、`STATE.md`、`.loop/config.json`、`.loop/tasks/00-framework-baseline.md`、`.loop/evidence/LOOP-INIT-00-report.md`、`.loop/evidence/.gitkeep`、`.loop/logs/.gitkeep`、`.loop/history/.gitkeep`、`scripts/lint_loop.mjs`、根 `package.json`
-- **最后提交**：`d4a5478`，`LOOP-INIT-00: establish loop engineering baseline`；本文件的最终状态持久化提交随后创建
+  - ⚠️ `vendor/agency-orchestrator` 缺失，GitHub 443 当前不可达；不得以未验证的远端 commit 或文档描述替代源码证据。
+  - ⚠️ TapCanvas 本地工作树包含大量既有修改，且源码含 child_process、MCP、API Key、文件写入和回调入口；未经安全裁剪不得上线。
+- **测试结果**：`npm run loop:validate; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; npm run loop:lint` 通过，exit 0；首次 `&&` 写法因 PowerShell 兼容性失败，已修正
+- **Lint 结果**：修正后的 `npm run loop:lint` 通过，18 个 JavaScript 文件；`git diff --check` exit 0
+- **变更文件**：`.loop/tasks/01-source-compatibility-baseline.md`、`.loop/evidence/LOOP-SRC-01-report.md`、`STATE.md`
+- **最后提交**：`5f6bde6`，`LOOP-INIT-00: persist final handoff state`；本任务阻塞证据待提交
 - **下一会话启动指令**：请读取 AGENTS.md 和 STATE.md，加载当前任务，从上次中断的地方继续。
