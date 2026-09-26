@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "max_loops": 3,
+  "approved_cross_service_max_loops": 5,
+  "protected_branches": ["main", "master"],
+  "require_task_branch": true,
+  "require_human_confirmation_for_infrastructure": true,
+  "task_exit": {
+    "test_command": "npm test",
+    "lint_command": "npm run loop:lint",
+    "require_zero_exit": true,
+    "require_no_new_lint_errors": true
+  },
+  "production_gate": {
+    "separate_from_task_exit": true,
+    "requires_human_approval": true,
+    "required_evidence": [
+      "acceptance_matrix",
+      "security_and_permission_checks",
+      "migration_review",
+      "backup_restore",
+      "observability",
+      "rollback_readiness"
+    ]
+  },
+  "handoff_instruction": "请读取 AGENTS.md 和 STATE.md，加载当前任务，从上次中断的地方继续。",
+  "coordinator_only_files": ["STATE.md"],
+  "evidence_dir": ".loop/evidence",
+  "logs_dir": ".loop/logs",
+  "history_dir": ".loop/history"
+}

@@ -1,0 +1,13 @@
+{
+  "name": "zsxq-token-engineering-loop",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "loop:lint": "node scripts/lint_loop.mjs",
+    "loop:validate": "python scripts/validate_acceptance.py && python scripts/validate_contracts.py",
+    "loop:test": "npm --prefix services/super-canvas-adapter test && npm --prefix services/platform-gateway test && npm --prefix services/opc-service test",
+    "loop:smoke": "node scripts/smoke_test.mjs",
+    "loop:check": "npm run loop:validate && npm run loop:test && npm run loop:smoke",
+    "test": "npm run loop:check"
+  }
+}
