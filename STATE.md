@@ -43,5 +43,5 @@
 - **测试结果**：根项目 Node22 `npm test` 通过；agency `npm run build` 通过；agency 全量 `npm test` 被 Windows POSIX fixture 阻塞
 - **Lint 结果**：根项目 Node22 `npm run loop:lint` 通过，18 个 JavaScript 文件；`git diff --check` exit 0
 - **变更文件**：`.loop/evidence/LOOP-SRC-01-resume-report.md`、`STATE.md`
-- **最后提交**：`69c4583`，`LOOP-ORCH-00: persist orchestration handoff`；本次验证阻塞证据待提交
+- **最后提交**：`5ed9273`，`LOOP-SRC-01: record latest source regression blocker`；人工确认后的最新来源、环境和回归证据已持久化
 - **下一会话启动指令**：请读取 AGENTS.md 和 STATE.md，加载当前任务，从上次中断的地方继续。
