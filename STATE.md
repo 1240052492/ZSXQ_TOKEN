@@ -35,5 +35,5 @@
 - **测试结果**：`npm run loop:validate; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; npm run loop:lint` 通过，exit 0；首次 `&&` 写法因 PowerShell 兼容性失败，已修正
 - **Lint 结果**：修正后的 `npm run loop:lint` 通过，18 个 JavaScript 文件；`git diff --check` exit 0
 - **变更文件**：`AGENTS.md`、`.loop/config.json`、`.loop/tasks/02-orchestration-design.md`、`.loop/evidence/LOOP-ORCH-00-report.md`、`docs/development/loop-orchestration.md`、`STATE.md`
-- **最后提交**：`59bdea4`，`LOOP-SRC-01: record runtime baseline drift`；本次 orchestration 设计变更待提交
+- **最后提交**：`10e0c9e`，`LOOP-ORCH-00: add Orca orchestration design`；状态交接已包含本次设计验收结果
 - **下一会话启动指令**：请读取 AGENTS.md 和 STATE.md，加载当前任务，从上次中断的地方继续。
