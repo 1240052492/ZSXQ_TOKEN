@@ -32,5 +32,5 @@
 - **测试结果**：`npm run loop:validate; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; npm run loop:lint` 通过，exit 0；首次 `&&` 写法因 PowerShell 兼容性失败，已修正
 - **Lint 结果**：修正后的 `npm run loop:lint` 通过，18 个 JavaScript 文件；`git diff --check` exit 0
 - **变更文件**：`.loop/tasks/01-source-compatibility-baseline.md`、`.loop/evidence/LOOP-SRC-01-report.md`、`STATE.md`
-- **最后提交**：`5f6bde6`，`LOOP-INIT-00: persist final handoff state`；本任务阻塞证据待提交
+- **最后提交**：`67025d8`，`LOOP-SRC-01: record source baseline blocker`；本状态文件的最终交接持久化提交随后创建
 - **下一会话启动指令**：请读取 AGENTS.md 和 STATE.md，加载当前任务，从上次中断的地方继续。
