@@ -1,9 +1,9 @@
 # Loop 状态交接契约
 
-- **当前任务阶段**：`LOOP-SRC-01` 已阻塞，等待来源/许可证/能力边界人工确认
+- **当前任务阶段**：`LOOP-SRC-01` 已完成人工确认后的验证，但达到 3/3 loop 后阻塞
 - **任务分支**：`loop/init-framework-baseline`
 - **最大循环次数**：3
-- **当前 loop 次数**：1 / 3
+- **当前 loop 次数**：3 / 3
 - **已完成项**：
   - [x] 已确认集成模式、身份/密钥边界、计费规则和生产门禁要求
   - [x] 已创建任务分支，未触碰 `main` 或基础设施配置
@@ -14,6 +14,10 @@
   - [x] 已创建 `LOOP-SRC-01` 任务文件，限定为只读来源/许可证/能力核查
   - [x] 已核查本地 New API/TapCanvas 来源文件和 TapCanvas 禁止能力入口
   - [x] 已记录 agency-orchestrator 缺失及 GitHub 网络不可达证据
+  - [x] 已从 GitHub 获取 agency-orchestrator 最新 `main`，固定 commit `0b41c9895b5ef1b70938999f2ada1b3637583574`
+  - [x] 已安装 Node.js 22.18.0，并用 Node22 完成根项目回归测试
+  - [x] agency-orchestrator TypeScript build 通过
+  - [x] 已按 3/3 loop 停止，保留 Windows 上游测试阻塞证据
   - [x] 已将 `$orchestration` skill 的 Orca、角色、DAG、决策门和交接规则纳入 Loop 设计
 - **未完成/待办项（Next Steps）**：
   - [x] 完成本任务的文件结构和命令基线
@@ -21,7 +25,9 @@
   - [x] 由协调者复核 diff 并提交初始化任务
   - [x] 读取 `AGENTS.md`、本文件和 `01-source-compatibility-baseline.md` 后执行只读核查
   - [x] 产出源码、许可证和禁止能力证据；已按规则停止后续实现
-  - [ ] 人工确认三个来源的固定 commit、许可证/NOTICE、清洁快照和 agency-orchestrator 导入方式
+  - [x] 人工确认 agency-orchestrator 来源和最新 commit
+  - [ ] 人工决定在 Linux/WSL/Docker 中执行上游全量测试，或批准独立 Windows 测试兼容性补丁
+  - [ ] 安全审查 agency `npm ci` 报告的 14 个依赖漏洞
   - [ ] 阻塞解除后，再细化 New API Key 绑定 API、SSO 回调和计费账本合同
   - [x] `LOOP-ORCH-00` 流程设计验收通过；实际 Orca 派发仍需 runtime 可用并单独创建任务
 - **当前阻塞与踩坑提示（Blockers & Context）**：
@@ -32,8 +38,10 @@
   - ⚠️ `vendor/agency-orchestrator` 缺失，GitHub 443 当前不可达；不得以未验证的远端 commit 或文档描述替代源码证据。
   - ⚠️ TapCanvas 本地工作树包含大量既有修改，且源码含 child_process、MCP、API Key、文件写入和回调入口；未经安全裁剪不得上线。
   - ⚠️ 当前 Node.js 为 `v24.18.0`，项目契约声明 Node 22；测试在 Node 24 通过，但 Node 22 基线尚未复现，不得据此放行集成或生产。
-- **测试结果**：`npm run loop:validate; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; npm run loop:lint` 通过，exit 0；首次 `&&` 写法因 PowerShell 兼容性失败，已修正
-- **Lint 结果**：修正后的 `npm run loop:lint` 通过，18 个 JavaScript 文件；`git diff --check` exit 0
-- **变更文件**：`AGENTS.md`、`.loop/config.json`、`.loop/tasks/02-orchestration-design.md`、`.loop/evidence/LOOP-ORCH-00-report.md`、`docs/development/loop-orchestration.md`、`STATE.md`
-- **最后提交**：`10e0c9e`，`LOOP-ORCH-00: add Orca orchestration design`；状态交接已包含本次设计验收结果
+  - ⚠️ Node22 已安装并用于根项目回归；agency 全量测试仍被 Windows POSIX `agy` fixture 阻塞，不能宣称上游测试通过。
+  - ⚠️ agency 依赖审计报告 14 个漏洞（1 low、3 moderate、10 high），未完成安全审查前不得生产接入。
+- **测试结果**：根项目 Node22 `npm test` 通过；agency `npm run build` 通过；agency 全量 `npm test` 被 Windows POSIX fixture 阻塞
+- **Lint 结果**：根项目 Node22 `npm run loop:lint` 通过，18 个 JavaScript 文件；`git diff --check` exit 0
+- **变更文件**：`.loop/evidence/LOOP-SRC-01-resume-report.md`、`STATE.md`
+- **最后提交**：`69c4583`，`LOOP-ORCH-00: persist orchestration handoff`；本次验证阻塞证据待提交
 - **下一会话启动指令**：请读取 AGENTS.md 和 STATE.md，加载当前任务，从上次中断的地方继续。
