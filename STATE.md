@@ -1,6 +1,6 @@
 # Loop 状态交接契约
 
-- **当前任务阶段**：`LOOP-INIT-00`，建立项目级 Loop Engineering 基线
+- **当前任务阶段**：`LOOP-INIT-00` 已完成，等待加载下一个已批准工作包
 - **任务分支**：`loop/init-framework-baseline`
 - **最大循环次数**：3
 - **当前 loop 次数**：0
@@ -10,10 +10,11 @@
   - [x] 已确认仓库已有 `npm test` 相关验收、合同、服务测试和 smoke test 入口
   - [x] 已创建根级 `AGENTS.md`、`.loop/config.json`、任务、证据、日志和历史目录
   - [x] 已建立并运行统一 lint 命令
+  - [x] 已完成 staged diff 复核并创建初始化提交 `d4a5478`
 - **未完成/待办项（Next Steps）**：
-  - [ ] 完成本任务的文件结构和命令基线
-  - [ ] 运行 `npm run loop:lint`、`npm test`、`git diff --check`
-  - [ ] 由协调者复核 diff；通过任务硬出口后再决定是否提交初始化任务
+  - [x] 完成本任务的文件结构和命令基线
+  - [x] 运行 `npm run loop:lint`、`npm test`、`git diff --check`
+  - [x] 由协调者复核 diff 并提交初始化任务
   - [ ] 启动下一个已获批准的工作包前，先细化 New API Key 绑定 API、SSO 回调和计费账本合同
 - **当前阻塞与踩坑提示（Blockers & Context）**：
   - ⚠️ 当前仓库之前已有未提交业务/文档改动，本任务不得回滚或覆盖；初始化提交必须只包含本任务声明的文件。
@@ -23,5 +24,5 @@
 - **测试结果**：`npm test` 通过，验收矩阵 25 项、服务测试 18/2/4、smoke 5 项，exit 0
 - **Lint 结果**：`npm run loop:lint` 通过，18 个 JavaScript 文件，exit 0；`git diff --check` exit 0
 - **变更文件**：`AGENTS.md`、`STATE.md`、`.loop/config.json`、`.loop/tasks/00-framework-baseline.md`、`.loop/evidence/LOOP-INIT-00-report.md`、`.loop/evidence/.gitkeep`、`.loop/logs/.gitkeep`、`.loop/history/.gitkeep`、`scripts/lint_loop.mjs`、根 `package.json`
-- **最后提交**：待协调者完成 staged diff 复核后提交
+- **最后提交**：`d4a5478`，`LOOP-INIT-00: establish loop engineering baseline`；本文件的最终状态持久化提交随后创建
 - **下一会话启动指令**：请读取 AGENTS.md 和 STATE.md，加载当前任务，从上次中断的地方继续。
