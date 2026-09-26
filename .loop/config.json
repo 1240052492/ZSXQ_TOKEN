@@ -5,6 +5,46 @@
   "protected_branches": ["main", "master"],
   "require_task_branch": true,
   "require_human_confirmation_for_infrastructure": true,
+  "orchestration": {
+    "skill": "$orchestration",
+    "runtime": "orca",
+    "real_runtime_required": true,
+    "cli_resolution": [
+      "ORCA_CLI_COMMAND",
+      "orca-dev when ORCA_DEV_REPO_ROOT is set",
+      "orca-ide on Linux outside managed terminals",
+      "orca otherwise"
+    ],
+    "bootstrap_commands": [
+      "ORCA skills get orchestration",
+      "ORCA status --json"
+    ],
+    "roles": [
+      "coordinator",
+      "developer",
+      "test-case-author",
+      "test-executor",
+      "acceptance-reviewer",
+      "security-audit-reviewer"
+    ],
+    "coordinator_only_files": ["STATE.md"],
+    "worker_report_dir": ".loop/evidence",
+    "worker_done_requires": [
+      "scope",
+      "commands",
+      "artifacts",
+      "test_and_lint_result",
+      "blockers",
+      "next_action"
+    ],
+    "fallback": "blocked_without_runtime",
+    "decision_gates": [
+      "scope-and-contract",
+      "implementation-test-lint",
+      "acceptance-security",
+      "production-human-approval"
+    ]
+  },
   "task_exit": {
     "test_command": "npm test",
     "lint_command": "npm run loop:lint",

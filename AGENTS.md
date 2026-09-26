@@ -32,6 +32,14 @@
 - 基础设施、部署、DNS、TLS、密钥、数据库、CI 保护策略等变更必须逐项取得人工确认；本任务只做只读检查和流程文件初始化。
 - 多 Agent 并行时，只有协调者可以改写根 `STATE.md`；其他角色只能在 `.loop/evidence/` 写报告。
 
+## Orchestration 协调规则
+
+- 当任务涉及跨服务、认证、授权、计费、存储、安全审计、任务 DAG、决策门或需要等待/升级时，必须按 `docs/development/loop-orchestration.md` 使用 `$orchestration` skill 设计并记录协作过程。
+- 需要真实协调时只能使用 Orca runtime；不得用普通 subagent、临时脚本或聊天记录冒充 Orca 状态。运行前先按 skill 规则解析 CLI，执行 `ORCA skills get orchestration`，再执行 `ORCA status --json`。
+- 协调者负责冻结 work package、分派依赖 DAG、维护共享 loop 计数、等待 `worker_done`/escalation、主持决策门和唯一更新 `STATE.md`。开发、测试、验收、安全审计角色不得互相替代或自审。
+- worker 只能修改任务声明的文件，并在 `.loop/evidence/` 记录 scope、命令、产物、结果和 blocker；未通过测试/lint、权限边界或证据完整性时不能报告完成。
+- Orca CLI/runtime 不可用时必须明确标记 orchestration blocked，不得静默切换到非 Orca 协作；可继续的协调者只读规划也必须记录为未派发。
+
 ## 命令与证据
 
 - `npm test`：完整本地 Loop 检查（验收矩阵、合同、服务测试和 smoke test）。

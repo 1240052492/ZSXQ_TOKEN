@@ -14,6 +14,7 @@
   - [x] 已创建 `LOOP-SRC-01` 任务文件，限定为只读来源/许可证/能力核查
   - [x] 已核查本地 New API/TapCanvas 来源文件和 TapCanvas 禁止能力入口
   - [x] 已记录 agency-orchestrator 缺失及 GitHub 网络不可达证据
+  - [x] 已将 `$orchestration` skill 的 Orca、角色、DAG、决策门和交接规则纳入 Loop 设计
 - **未完成/待办项（Next Steps）**：
   - [x] 完成本任务的文件结构和命令基线
   - [x] 运行 `npm run loop:lint`、`npm test`、`git diff --check`
@@ -22,6 +23,7 @@
   - [x] 产出源码、许可证和禁止能力证据；已按规则停止后续实现
   - [ ] 人工确认三个来源的固定 commit、许可证/NOTICE、清洁快照和 agency-orchestrator 导入方式
   - [ ] 阻塞解除后，再细化 New API Key 绑定 API、SSO 回调和计费账本合同
+  - [x] `LOOP-ORCH-00` 流程设计验收通过；实际 Orca 派发仍需 runtime 可用并单独创建任务
 - **当前阻塞与踩坑提示（Blockers & Context）**：
   - ⚠️ 当前仓库之前已有未提交业务/文档改动，本任务不得回滚或覆盖；初始化提交必须只包含本任务声明的文件。
   - ⚠️ 基础设施尚未启动；任何 Docker、数据库、DNS、TLS、部署或密钥变更均需人工逐项确认。
@@ -32,6 +34,6 @@
   - ⚠️ 当前 Node.js 为 `v24.18.0`，项目契约声明 Node 22；测试在 Node 24 通过，但 Node 22 基线尚未复现，不得据此放行集成或生产。
 - **测试结果**：`npm run loop:validate; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; npm run loop:lint` 通过，exit 0；首次 `&&` 写法因 PowerShell 兼容性失败，已修正
 - **Lint 结果**：修正后的 `npm run loop:lint` 通过，18 个 JavaScript 文件；`git diff --check` exit 0
-- **变更文件**：`.loop/tasks/01-source-compatibility-baseline.md`、`.loop/evidence/LOOP-SRC-01-report.md`、`STATE.md`
-- **最后提交**：`1b5bd22`，`LOOP-SRC-01: persist blocked handoff state`；环境版本偏差记录待提交
+- **变更文件**：`AGENTS.md`、`.loop/config.json`、`.loop/tasks/02-orchestration-design.md`、`.loop/evidence/LOOP-ORCH-00-report.md`、`docs/development/loop-orchestration.md`、`STATE.md`
+- **最后提交**：`59bdea4`，`LOOP-SRC-01: record runtime baseline drift`；本次 orchestration 设计变更待提交
 - **下一会话启动指令**：请读取 AGENTS.md 和 STATE.md，加载当前任务，从上次中断的地方继续。
