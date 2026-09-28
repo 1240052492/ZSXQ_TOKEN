@@ -11,6 +11,7 @@ RUN npm ci --only=production && npm cache clean --force
 COPY services/super-canvas-adapter ./services/super-canvas-adapter
 COPY services/lib ./services/lib
 COPY vendor/TapCanvas ./vendor/TapCanvas
+RUN rm -rf ./vendor/TapCanvas/.pnpm-store
 
 # Expose port
 EXPOSE 3001
@@ -22,4 +23,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
 # Run as non-root user
 USER node
 
-CMD ["node", "services/super-canvas-adapter/index.js"]
+CMD ["node", "services/super-canvas-adapter/src/server.js"]

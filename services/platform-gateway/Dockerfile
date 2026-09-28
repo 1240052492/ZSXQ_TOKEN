@@ -21,4 +21,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
 # Run as non-root user
 USER node
 
-CMD ["node", "services/platform-gateway/index.js"]
+CMD ["node", "services/platform-gateway/src/server.js"]
