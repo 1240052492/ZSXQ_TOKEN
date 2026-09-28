@@ -37,8 +37,12 @@ function createServer({ port = Number(process.env.PORT || 8787), newApiBaseUrl =
   return server;
 }
 
-const isMainModule = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
-const server = isMainModule ? createServer() : null;
-if (server) server.listen(Number(process.env.PORT || 8787), '127.0.0.1');
+if (import.meta.url === `file://${process.argv[1]}`) {
+  const port = Number(process.env.PORT || 8787);
+  const server = createServer({ port });
+  server.listen(port, '0.0.0.0', () => {
+    console.log(`Platform Gateway listening on port ${port}`);
+  });
+}
 
-export { createServer, server };
+export { createServer };

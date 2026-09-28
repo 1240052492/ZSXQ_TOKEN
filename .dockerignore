@@ -1,0 +1,53 @@
+# Node modules (will be installed via npm ci)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Vendor-specific excludes
+vendor/TapCanvas/.pnpm-store/
+vendor/TapCanvas/node_modules/
+vendor/LocalMiniDrama/node_modules/
+vendor/agency-orchestrator/node_modules/
+vendor/new-api/data/
+vendor/new-api/logs/
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+docs/
+*.md
+!README.md
+
+# Tests
+test/
+tests/
+*.test.js
+*.spec.js
+
+# CI/CD
+.github/
+.loop/
+
+# Database
+db/migrations/
+db/scripts/
+
+# Scripts
+scripts/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+logs/
+*.log
+
+# Temp
+tmp/
+temp/
+.DS_Store
