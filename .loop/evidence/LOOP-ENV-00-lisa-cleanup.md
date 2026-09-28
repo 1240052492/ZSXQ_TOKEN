@@ -1,0 +1,23 @@
+# LOOP-ENV-00 Lisa Cleanup Evidence
+
+- Scope: remove the existing bbs-go and person-dashboard deployments from Lisa.
+- Remote target: SSH alias `lisa`; Ubuntu 24.04.1; Docker 29.7.2; Compose 5.5.0.
+- Actions completed:
+  - stopped and removed bbs-go and person-dashboard containers;
+  - removed the bbs-go PostgreSQL volume and project-specific images;
+  - removed `/opt/bbs-go` and `/opt/person_dashboard`;
+  - permanently removed `/root/backups/removed-projects-20260927`;
+  - removed all site-level Nginx configuration under `conf.d`, `sites-available`, and `sites-enabled`;
+  - left the Nginx package baseline installed and stopped.
+- Certificate:
+  - Certbot installed on Lisa;
+  - SAN certificate issued for the root, www, token, canvas, and opc hostnames;
+  - automatic renewal timer enabled and active;
+  - private key contents are intentionally excluded from this evidence.
+- Verification:
+  - `docker ps -a`: no containers;
+  - `docker volume ls`: no volumes;
+  - project and backup paths absent;
+  - Nginx site configuration directories empty;
+  - root filesystem has approximately 7.7 GB available.
+- Remaining deployment state: no application service or reverse-proxy route is running on Lisa until the new stack is deployed.

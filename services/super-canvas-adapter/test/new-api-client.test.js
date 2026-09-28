@@ -50,3 +50,24 @@ test('does not expose a raw upstream fetch error', async () => {
     return true;
   });
 });
+
+test('calls catalog, quote, reserve and settlement with validated internal request shapes', async () => {
+  const requests = [];
+  const responses = [
+    { items: [{ platform_model_id: 'm1', alias: 'image', price_version: 'v1', protocol_adapter: 'image-v1', parameter_profiles: [] }] },
+    { quote_id: 'q1', price_version: 'v1', estimated_quota: 10 },
+    { reservation_id: 'r1', reserved_quota: 10, status: 'reserved' },
+    { reservation_id: 'r1', status: 'settled', charged_usage: 8, refunded_usage: 2 },
+  ];
+  const client = new NewApiClient({
+    baseUrl: 'http://new-api.internal', serviceToken: 'token',
+    fetchImpl: async (url, options) => { requests.push({ url, options }); return { ok: true, status: 200, json: async () => responses.shift() }; },
+  });
+  assert.equal((await client.listCanvasModels('image')).length, 1);
+  await client.quoteTask({ task_id: 't1' });
+  await client.reserveQuota({ quote_id: 'q1' }, 'reserve-key-123456');
+  await client.settleUsage({ reservation_id: 'r1' }, 'settle-key-123456');
+  assert.match(requests[0].url, /capability=image/);
+  assert.equal(requests[2].options.headers['Idempotency-Key'], 'reserve-key-123456');
+  assert.equal(requests[3].options.headers['Idempotency-Key'], 'settle-key-123456');
+});

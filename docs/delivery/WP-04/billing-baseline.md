@@ -16,3 +16,6 @@ The component contains no wallet balance and does not persist a ledger. It is
 not a substitute for New API wallet integration. The next implementation slice
 will add New API quote/reservation/settlement client methods and persist task
 references in `super_canvas`.
+
+The current client/orchestrator slice is covered by
+[`test-report.md`](./test-report.md).

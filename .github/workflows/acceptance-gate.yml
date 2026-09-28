@@ -16,7 +16,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
       - name: Validate acceptance matrix
         run: python scripts/validate_acceptance.py
+      - name: Validate contracts and database boundaries
+        run: python scripts/validate_contracts.py
+      - name: Run engineering loop checks
+        run: npm test
       - name: Check source acceptance document
         run: test -s 'ZSXQ_整合项目_模块验收目标.md'

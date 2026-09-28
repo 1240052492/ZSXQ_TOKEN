@@ -24,12 +24,13 @@
 
 - 测试（PowerShell）：`npm run loop:validate; if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }; npm run loop:lint`
 - 辅助核查：`git ls-remote`、`git status --short --branch`、许可证文件只读扫描
+- effective_max_loops: 5
 
 ## 循环和停止条件
 
-- `max_loops=3`，共享协调者计数。
+- `effective_max_loops=5`，共享协调者计数。
 - 远端不可访问、许可证无法定位、源码能力无法审查或需要基础设施变更时立即记录 `blocked`，不以猜测替代证据。
-- 达到 3 次失败仍无法获得证据时停止并请求人工确认来源、许可证和导入方式。
+- 达到 5 次失败仍无法获得证据时停止并请求人工确认来源、许可证和导入方式。
 
 ## 交付物
 

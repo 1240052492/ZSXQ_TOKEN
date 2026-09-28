@@ -59,4 +59,62 @@ export class NewApiClient {
       clearTimeout(timer);
     }
   }
+
+  async listCanvasModels(capability) {
+    if (!capability) throw new NewApiClientError('capability is required', { code: 'INVALID_REQUEST' });
+    const payload = await this.#request(`/internal/v1/models/catalog?capability=${encodeURIComponent(capability)}`, { method: 'GET' });
+    if (!Array.isArray(payload?.items)) throw new NewApiClientError('New API model catalog is invalid', { code: 'INVALID_CATALOG_RESPONSE' });
+    return payload.items;
+  }
+
+  async quoteTask(request) {
+    return this.#request('/internal/v1/quotes', { body: request, required: ['quote_id', 'price_version', 'estimated_quota'] });
+  }
+
+  async reserveQuota(request, idempotencyKey) {
+    return this.#request('/internal/v1/reservations', { body: request, idempotencyKey, required: ['reservation_id', 'reserved_quota', 'status'] });
+  }
+
+  async invokeModel(request, idempotencyKey) {
+    return this.#request('/internal/v1/model-proxy/invoke', { body: request, idempotencyKey, required: ['request_id', 'task_id', 'status'] });
+  }
+
+  async settleUsage(request, idempotencyKey) {
+    return this.#request('/internal/v1/settlements', { body: request, idempotencyKey, required: ['reservation_id', 'status', 'charged_usage', 'refunded_usage'] });
+  }
+
+  async #request(path, { method = 'POST', body, idempotencyKey, required = [] } = {}) {
+    if (idempotencyKey && idempotencyKey.length < 16) throw new NewApiClientError('idempotency key is too short', { code: 'INVALID_REQUEST' });
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), this.#timeoutMs);
+    try {
+      const response = await this.#fetch(`${this.#baseUrl}${path}`, {
+        method,
+        signal: controller.signal,
+        headers: {
+          authorization: `Bearer ${this.#serviceToken}`,
+          ...(body ? { 'content-type': 'application/json' } : {}),
+          ...(idempotencyKey ? { 'Idempotency-Key': idempotencyKey } : {}),
+        },
+        ...(body ? { body: JSON.stringify(body) } : {}),
+      });
+      let payload = null;
+      try { payload = await response.json(); } catch { /* normalized below */ }
+      if (!response.ok) {
+        throw new NewApiClientError(payload?.error?.message || 'New API request failed', {
+          status: response.status,
+          code: payload?.error?.code || 'NEW_API_REQUEST_FAILED',
+        });
+      }
+      if (required.some((field) => payload?.[field] === undefined || payload?.[field] === null)) {
+        throw new NewApiClientError('New API response is missing required fields', { status: response.status, code: 'INVALID_UPSTREAM_RESPONSE' });
+      }
+      return payload;
+    } catch (error) {
+      if (error instanceof NewApiClientError) throw error;
+      throw new NewApiClientError('New API request unavailable', { code: 'UPSTREAM_UNAVAILABLE' });
+    } finally {
+      clearTimeout(timer);
+    }
+  }
 }

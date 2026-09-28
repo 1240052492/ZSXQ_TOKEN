@@ -24,5 +24,5 @@
 
 ## 停止条件
 
-- `max_loops=3`；本任务只允许流程文档和配置变更。
+- effective_max_loops: 5；本任务只允许流程文档和配置变更。
 - Orca CLI/runtime 不可用时不尝试猜测命令或切换到普通 subagent，不影响本设计任务，但实际派发任务必须标记 `orchestration_blocked`。

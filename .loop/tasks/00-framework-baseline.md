@@ -14,7 +14,7 @@
 
 ## 验收标准
 
-- `INIT-01`：Loop 配置可被 JSON 解析，声明 `max_loops=3`、任务硬出口和生产独立门禁。
+- `INIT-01`：Loop 配置可被 JSON 解析，声明任务级 `effective_max_loops=5`、任务硬出口和生产独立门禁。
 - `INIT-02`：新会话指令、分支保护、基础设施人工确认和协调者唯一更新 `STATE.md` 规则已写入静态契约。
 - `INIT-03`：`npm run loop:lint` 返回 0，且没有新增 JavaScript 模块语法错误。
 - `INIT-04`：`npm test` 返回 0，且输出可复现、未包含敏感凭据。
@@ -24,12 +24,13 @@
 
 - 测试：`npm test`
 - Lint：`npm run loop:lint`
+- effective_max_loops: 5
 - 辅助检查：`git diff --check`
 
 ## 循环和停止条件
 
-- `max_loops=3`，计数由协调者维护，子任务重试不得重置。
-- 若任一硬出口命令失败，进入失败分析并最多重试两次；第三次仍失败立即标记 `blocked` 并请求人工介入。
+- `effective_max_loops=5`，计数由协调者维护，子任务重试不得重置。
+- 若任一硬出口命令失败，进入失败分析并最多重试四次；第五次仍失败立即标记 `blocked` 并请求人工介入。
 - 若发现需要基础设施或业务范围外修改，立即停止并登记阻塞，不扩大本任务范围。
 
 ## 交付物

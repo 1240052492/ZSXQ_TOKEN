@@ -1,7 +1,6 @@
 {
   "version": 1,
-  "max_loops": 3,
-  "approved_cross_service_max_loops": 5,
+  "max_loops": 5,
   "protected_branches": ["main", "master"],
   "require_task_branch": true,
   "require_human_confirmation_for_infrastructure": true,
@@ -9,41 +8,14 @@
     "skill": "$orchestration",
     "runtime": "orca",
     "real_runtime_required": true,
-    "cli_resolution": [
-      "ORCA_CLI_COMMAND",
-      "orca-dev when ORCA_DEV_REPO_ROOT is set",
-      "orca-ide on Linux outside managed terminals",
-      "orca otherwise"
-    ],
-    "bootstrap_commands": [
-      "ORCA skills get orchestration",
-      "ORCA status --json"
-    ],
-    "roles": [
-      "coordinator",
-      "developer",
-      "test-case-author",
-      "test-executor",
-      "acceptance-reviewer",
-      "security-audit-reviewer"
-    ],
+    "cli_resolution": ["ORCA_CLI_COMMAND", "orca-dev when ORCA_DEV_REPO_ROOT is set", "orca-ide on Linux outside managed terminals", "orca otherwise"],
+    "bootstrap_commands": ["ORCA skills get orchestration", "ORCA status --json"],
+    "roles": ["coordinator", "developer", "test-case-author", "test-executor", "acceptance-reviewer", "security-audit-reviewer"],
     "coordinator_only_files": ["STATE.md"],
     "worker_report_dir": ".loop/evidence",
-    "worker_done_requires": [
-      "scope",
-      "commands",
-      "artifacts",
-      "test_and_lint_result",
-      "blockers",
-      "next_action"
-    ],
+    "worker_done_requires": ["scope", "commands", "artifacts", "test_and_lint_result", "blockers", "next_action"],
     "fallback": "blocked_without_runtime",
-    "decision_gates": [
-      "scope-and-contract",
-      "implementation-test-lint",
-      "acceptance-security",
-      "production-human-approval"
-    ]
+    "decision_gates": ["scope-and-contract", "implementation-test-lint", "acceptance-security", "production-human-approval"]
   },
   "task_exit": {
     "test_command": "npm test",
@@ -54,17 +26,9 @@
   "production_gate": {
     "separate_from_task_exit": true,
     "requires_human_approval": true,
-    "required_evidence": [
-      "acceptance_matrix",
-      "security_and_permission_checks",
-      "migration_review",
-      "backup_restore",
-      "observability",
-      "rollback_readiness"
-    ]
+    "required_evidence": ["acceptance_matrix", "security_and_permission_checks", "migration_review", "backup_restore", "observability", "rollback_readiness"]
   },
-  "handoff_instruction": "请读取 AGENTS.md 和 STATE.md，加载当前任务，从上次中断的地方继续。",
-  "coordinator_only_files": ["STATE.md"],
+  "handoff_instruction": "Read AGENTS.md and STATE.md, load the active task, and continue from the last interruption.",
   "evidence_dir": ".loop/evidence",
   "logs_dir": ".loop/logs",
   "history_dir": ".loop/history"
