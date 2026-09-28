@@ -18,3 +18,5 @@
 # Local development storage
 /storage/
 /dev-storage/
+# Database passwords - DO NOT COMMIT
+scripts/init-postgres-lisa.sh
