@@ -3,6 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "validate-env": "node scripts/validate-env.mjs",
+    "generate-secrets": "./scripts/generate-secrets.sh",
     "loop:lint": "node scripts/lint_loop.mjs",
     "loop:validate": "python scripts/validate_acceptance.py && python scripts/validate_contracts.py",
     "loop:test": "npm --prefix services/super-canvas-adapter test && npm --prefix services/platform-gateway test && npm --prefix services/opc-service test",

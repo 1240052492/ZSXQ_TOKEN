@@ -1,0 +1,583 @@
+openapi: 3.0.3
+info:
+  title: New API Internal Service Contract
+  version: 1.0.0
+  description: |
+    Internal service-to-service API for New API ↔ Canvas and New API ↔ OPC integration.
+    All endpoints require service authentication and are NOT exposed to public clients.
+
+servers:
+  - url: https://api.example.com/internal/v1
+    description: Internal service endpoint (private network only)
+
+security:
+  - ServiceToken: []
+
+components:
+  securitySchemes:
+    ServiceToken:
+      type: http
+      scheme: bearer
+      description: Service-to-service authentication token (SERVICE_TOKEN)
+
+  schemas:
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+              description: Machine-readable error code
+              example: INSUFFICIENT_BALANCE
+            message:
+              type: string
+              description: Human-readable error message
+              example: User balance insufficient for reservation
+
+    SSOExchangeRequest:
+      type: object
+      required:
+        - code
+        - audience
+        - state
+      properties:
+        code:
+          type: string
+          description: One-time authorization code (60s TTL, single-use)
+          minLength: 32
+        audience:
+          type: string
+          enum: [canvas, opc]
+          description: Target service identifier
+        state:
+          type: string
+          description: CSRF protection state value
+          minLength: 16
+
+    SSOExchangeResponse:
+      type: object
+      required:
+        - user_id
+        - session_subject
+        - user_status
+      properties:
+        user_id:
+          type: integer
+          format: int64
+          description: New API user ID
+          example: 12345
+        session_subject:
+          type: string
+          description: Session identifier for audit
+          example: "sess_a1b2c3d4"
+        user_status:
+          type: string
+          enum: [active, suspended, disabled]
+          description: Current user account status
+
+    ModelCapability:
+      type: string
+      enum: [text, image, video, audio, tts, embedding]
+      description: Model capability category
+
+    ModelCatalogItem:
+      type: object
+      required:
+        - id
+        - name
+        - capabilities
+        - price_per_1k_tokens
+        - price_version
+        - provider_label
+      properties:
+        id:
+          type: string
+          description: Platform model identifier
+          example: "gpt-4-turbo"
+        name:
+          type: string
+          description: Display name
+          example: "GPT-4 Turbo"
+        capabilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/ModelCapability'
+        price_per_1k_tokens:
+          type: string
+          description: Price per 1K tokens (decimal string)
+          example: "0.03"
+        price_version:
+          type: string
+          description: Pricing version identifier
+          example: "2024-03"
+        provider_label:
+          type: string
+          description: Provider display label (masked)
+          example: "OpenAI"
+        parameter_profiles:
+          type: array
+          items:
+            type: string
+          description: Available parameter profiles
+          example: ["default", "creative", "precise"]
+
+    ModelCatalogResponse:
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ModelCatalogItem'
+
+    QuoteRequest:
+      type: object
+      required:
+        - user_id
+        - task_id
+        - model_id
+        - estimated_tokens
+        - source
+      properties:
+        user_id:
+          type: integer
+          format: int64
+        task_id:
+          type: string
+          description: Business system task identifier
+          example: "canvas_task_123"
+        model_id:
+          type: string
+          description: Platform model identifier
+        estimated_tokens:
+          type: integer
+          minimum: 1
+        source:
+          type: string
+          enum: [canvas, opc]
+        parameter_snapshot:
+          type: object
+          description: Minimal parameter snapshot for audit
+
+    QuoteResponse:
+      type: object
+      required:
+        - quote_id
+        - price_version
+        - estimated_quota
+        - currency
+      properties:
+        quote_id:
+          type: string
+          example: "quote_a1b2c3"
+        price_version:
+          type: string
+        estimated_quota:
+          type: string
+          description: Estimated cost (decimal string)
+        currency:
+          type: string
+          example: "CNY"
+
+    ReservationRequest:
+      type: object
+      required:
+        - user_id
+        - task_id
+        - model_id
+        - estimated_tokens
+        - source
+      properties:
+        user_id:
+          type: integer
+          format: int64
+        task_id:
+          type: string
+        model_id:
+          type: string
+        estimated_tokens:
+          type: integer
+          minimum: 1
+        source:
+          type: string
+          enum: [canvas, opc]
+        run_id:
+          type: string
+          description: OPC run identifier (OPC only)
+        step_id:
+          type: string
+          description: OPC step identifier (OPC only)
+
+    ReservationResponse:
+      type: object
+      required:
+        - reservation_id
+        - reserved_quota
+        - status
+        - expires_at
+      properties:
+        reservation_id:
+          type: string
+          example: "rsv_xyz789"
+        reserved_quota:
+          type: string
+          description: Reserved amount (decimal string)
+        status:
+          type: string
+          enum: [reserved, expired, settled, refunded]
+        expires_at:
+          type: string
+          format: date-time
+          description: Reservation expiration (15 minutes)
+
+    ModelInvokeRequest:
+      type: object
+      required:
+        - reservation_id
+        - user_id
+        - task_id
+        - model_id
+        - parameters
+        - source
+      properties:
+        reservation_id:
+          type: string
+        user_id:
+          type: integer
+          format: int64
+        task_id:
+          type: string
+        model_id:
+          type: string
+        parameters:
+          type: object
+          description: Model invocation parameters
+        source:
+          type: string
+          enum: [canvas, opc]
+        run_id:
+          type: string
+        step_id:
+          type: string
+
+    ModelInvokeResponse:
+      type: object
+      required:
+        - request_id
+        - task_id
+        - status
+      properties:
+        request_id:
+          type: string
+          example: "req_abc123"
+        task_id:
+          type: string
+        status:
+          type: string
+          enum: [queued, running, succeeded, failed, cancelled]
+        result:
+          type: object
+          description: Model response (present when succeeded)
+
+    SettlementRequest:
+      type: object
+      required:
+        - reservation_id
+        - actual_tokens
+        - actual_usage
+      properties:
+        reservation_id:
+          type: string
+        actual_tokens:
+          type: integer
+          minimum: 0
+        actual_usage:
+          type: string
+          description: Actual cost (decimal string)
+
+    SettlementResponse:
+      type: object
+      required:
+        - reservation_id
+        - status
+        - charged_usage
+        - refunded_usage
+      properties:
+        reservation_id:
+          type: string
+        status:
+          type: string
+          enum: [settled, refunded]
+        charged_usage:
+          type: string
+          description: Final charged amount
+        refunded_usage:
+          type: string
+          description: Refunded amount (if over-reserved)
+        transaction_id:
+          type: string
+
+    WalletBalanceResponse:
+      type: object
+      required:
+        - balance
+        - currency
+        - reserved
+      properties:
+        balance:
+          type: string
+          description: Available balance (decimal string)
+        currency:
+          type: string
+          example: "CNY"
+        reserved:
+          type: string
+          description: Currently reserved amount
+
+  parameters:
+    XRequestID:
+      name: X-Request-ID
+      in: header
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Request correlation ID (UUID v4)
+
+    XServiceName:
+      name: X-Service-Name
+      in: header
+      required: true
+      schema:
+        type: string
+        enum: [super-canvas-adapter, opc-service]
+      description: Calling service identifier
+
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: false
+      schema:
+        type: string
+        minLength: 16
+      description: Idempotency key for mutation operations (15min cache)
+
+paths:
+  /sso/exchange:
+    post:
+      summary: Exchange SSO authorization code
+      operationId: exchangeSSOCode
+      parameters:
+        - $ref: '#/components/parameters/XRequestID'
+        - $ref: '#/components/parameters/XServiceName'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SSOExchangeRequest'
+      responses:
+        '200':
+          description: Code exchanged successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SSOExchangeResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Invalid or expired code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Service disabled or user suspended
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /models/catalog:
+    get:
+      summary: Get model catalog
+      operationId: getModelCatalog
+      parameters:
+        - $ref: '#/components/parameters/XRequestID'
+        - $ref: '#/components/parameters/XServiceName'
+        - name: capability
+          in: query
+          required: false
+          schema:
+            $ref: '#/components/schemas/ModelCapability'
+          description: Filter by capability
+        - name: user_id
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: User ID for availability filtering
+      responses:
+        '200':
+          description: Model catalog retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelCatalogResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /wallet/balance:
+    get:
+      summary: Get user wallet balance
+      operationId: getWalletBalance
+      parameters:
+        - $ref: '#/components/parameters/XRequestID'
+        - $ref: '#/components/parameters/XServiceName'
+        - name: user_id
+          in: query
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Balance retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WalletBalanceResponse'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /quotes:
+    post:
+      summary: Get price quote
+      operationId: createQuote
+      parameters:
+        - $ref: '#/components/parameters/XRequestID'
+        - $ref: '#/components/parameters/XServiceName'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuoteRequest'
+      responses:
+        '200':
+          description: Quote created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuoteResponse'
+        '404':
+          description: Model not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /reservations:
+    post:
+      summary: Reserve quota for model invocation
+      operationId: createReservation
+      parameters:
+        - $ref: '#/components/parameters/XRequestID'
+        - $ref: '#/components/parameters/XServiceName'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReservationRequest'
+      responses:
+        '200':
+          description: Quota reserved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationResponse'
+        '409':
+          description: Insufficient balance or conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /model-proxy/invoke:
+    post:
+      summary: Invoke controlled model via New API proxy
+      operationId: invokeModel
+      parameters:
+        - $ref: '#/components/parameters/XRequestID'
+        - $ref: '#/components/parameters/XServiceName'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ModelInvokeRequest'
+      responses:
+        '200':
+          description: Model invoked successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ModelInvokeResponse'
+        '404':
+          description: Reservation not found or expired
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /settlements:
+    post:
+      summary: Settle actual usage and refund difference
+      operationId: settleUsage
+      parameters:
+        - $ref: '#/components/parameters/XRequestID'
+        - $ref: '#/components/parameters/XServiceName'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SettlementRequest'
+      responses:
+        '200':
+          description: Usage settled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettlementResponse'
+        '404':
+          description: Reservation not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
