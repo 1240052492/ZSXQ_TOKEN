@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${ZSXQ_PG_ADMIN_PASSWORD:?set ZSXQ_PG_ADMIN_PASSWORD in the shell}
+      POSTGRES_DB: postgres
+    ports:
+      - "55432:5432"
+    volumes:
+      - zsxq_wp02_pg:/var/lib/postgresql/data
+      - ./bootstrap:/docker-entrypoint-initdb.d:ro
+      - ./roles.sql:/opt/zsxq/roles.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+volumes:
+  zsxq_wp02_pg:

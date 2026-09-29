@@ -1,0 +1,13 @@
+# Local upstream source archives and demo dependencies.
+/vendor/
+**/node_modules/
+**/dist/
+**/data/
+*.db
+*.db-shm
+*.db-wal
+
+# Local runtime logs and temporary evidence.
+*.log
+.env
+!.env.example
